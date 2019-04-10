@@ -7,5 +7,15 @@ class ListNote(
         title: String,
         createdAt: LocalDateTime,
         lastEdit: LocalDateTime,
+        owner: User?,
         content: List<String>
-) : Note<List<String>>(id, title, createdAt, lastEdit, content)
+) : Note<List<String>>(id, title, createdAt, lastEdit, owner, content) {
+    constructor(): this(
+            null,
+            "",
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            null,
+            mutableListOf()
+    )
+}
