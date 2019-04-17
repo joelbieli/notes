@@ -1,9 +1,7 @@
 package ch.jb.notes
 
-import ch.jb.notes.note.domainmodel.ListNote
-import ch.jb.notes.note.domainmodel.TextNote
-import ch.jb.notes.note.repository.ListNoteRepository
-import ch.jb.notes.note.repository.TextNoteRepository
+import ch.jb.notes.note.domainmodel.Note
+import ch.jb.notes.note.repository.NoteRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -14,28 +12,19 @@ import java.time.LocalDateTime
 class NotesApplication {
 
     @Bean
-    fun run(listNoteRepository: ListNoteRepository, textNoteRepository: TextNoteRepository) = CommandLineRunner {
-        val lnote = ListNote(
+    fun run(noteRepository: NoteRepository) = CommandLineRunner {
+        val lnote = Note(
                 null,
                 "title1",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 null,
-                listOf("content 11", "content 12")
+                mutableMapOf("blocks" to arrayOf(
+                        mapOf("type" to "header")
+                ))
         )
-        listNoteRepository.deleteAll().subscribe()
-        listNoteRepository.save(lnote).subscribe(null, null, { println("gucci") })
-
-        val tnote = TextNote(
-                null,
-                "title1",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                null,
-                "coooonnnteeennnt"
-        )
-        textNoteRepository.deleteAll().subscribe()
-        textNoteRepository.save(tnote).subscribe(null, null, { println("gucci") })
+        noteRepository.deleteAll().subscribe()
+        noteRepository.save(lnote).subscribe(null, null, { println("gucci") })
     }
 }
 
