@@ -1,70 +1,82 @@
 import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { createNote } from "../redux/actions";
-import {Button, Form, Input, Radio, Row, Col} from "antd";
+import { connect } from 'react-redux';
+import { createNote } from '../redux/actions';
+import {Button, Form, Input, Radio, Row, Col} from 'antd';
 
 const mapDispatchToProps = dispatch => {
     return { createNote: note => dispatch(createNote(note)) };
 };
 
-class NewNoteFormView extends Component {
+class NewNoteFormComponent extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            title: "",
+            title: '',
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
-        this.setState({ [event.target.id]: event.target.value })
+    handleChange(event, target) {
+        const data = {};
+        data[target] = { value: event.target.value };
+        this.setState({ [target]: event.target.value });
+        this.props.form.setFields(data);
+        console.log(this.state);
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        const { title } = this.state;
-        this.props.createNote({ title });
-        this.setState({ title: "" });
+        this.props.form.validateFields(error => {
+            if (!error) {
+                this.props.form.resetFields(['title']);
+                const { title, type } = this.state;
+                this.props.createNote({ title, type });
+            }
+        });
     }
 
     render() {
-        const { title } = this.state;
+        const { getFieldDecorator } = this.props.form;
 
         return (
-            <Row type={"flex"} justify={"center"}>
+            <Row type={'flex'} justify={'center'}>
                 <Col>
                     <Form
-                        layout={"inline"}
+                        layout={'inline'}
                         onSubmit={this.handleSubmit}
                     >
                         <Form.Item>
-                            <Input
-                                id={"title"}
-                                type={"text"}
-                                value={title}
-                                placeholder={"Title..."}
-                                onChange={this.handleChange}
-                            />
-                        </Form.Item>
-                        <Form.Item>
-                            <Radio.Group onChange={this.handleChange} defaultValue={"text"}>
-                                <Radio.Button value={"list"}>List Note</Radio.Button>
-                                <Radio.Button value={"text"}>Text Note</Radio.Button>
-                            </Radio.Group>
+                            {getFieldDecorator('title', {
+                                initialValue: '',
+                                rules: [{
+                                    required: true,
+                                    message: 'Title must not be empty',
+                                }],
+                            })(
+                                <Input
+                                    id={'title'}
+                                    type={'text'}
+                                    placeholder={'Title'}
+                                    onChange={(event) => this.handleChange(event, 'title')}
+                                />
+                            )}
                         </Form.Item>
                         <Form.Item style={{ right: 0 }}>
-                            <Button icon={"check"} htmlType={"submit"}>Create</Button>
+                            <Button icon={'check'} htmlType={'submit'}>Create</Button>
                         </Form.Item>
+                        <Button icon={"check-circle"}/>
                     </Form>
-                </Col>
+                </Col>9
             </Row>
         );
     }
 }
 
-const NewNoteForm = connect(null, mapDispatchToProps)(NewNoteFormView);
+const WrappedNewNoteForm = Form.create({ name: '' })(NewNoteFormComponent);
+
+const NewNoteForm = connect(null, mapDispatchToProps)(WrappedNewNoteForm);
 
 export default NewNoteForm;

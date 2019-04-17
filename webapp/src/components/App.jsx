@@ -12,16 +12,15 @@ import NewNoteForm from './NewNoteForm';
 const App = () => (
     <div>
         <PageHeader
-            onBack={() => {}}
-            title={"Overview"}
+            title={'Overview'}
             extra={[
-                <Button htmlType={"button"} size={"default"} shape={"circle"} icon={"setting"}/>
+                <Button htmlType={'button'} size={'default'} shape={'circle'} icon={'setting'}/>
             ]}
         />
-        <Row type={"flex"} justify={"center"}>
+        <Row type={'flex'} justify={'center'}>
             <Col span={12}>
-                <NotesList/>
                 <NewNoteForm/>
+                <NotesList/>
             </Col>
         </Row>
     </div>
