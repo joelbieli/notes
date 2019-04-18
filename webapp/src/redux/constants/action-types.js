@@ -3,4 +3,6 @@ export const NOTE_UPDATED = 'UPDATE_NOTE';
 export const EMPTY_TITLE = 'EMPTY_TITLE';
 export const NOTE_LOADED = 'NOTE_LOADED';
 export const NOTE_DELETED = 'NOTE_DELETED';
+export const TOGGLE_EDITOR_MODAL = 'TOGGLE_EDITOR_MODAL';
+export const UPDATE_CURRENT_NOTE = 'UPDATE_CURRENT_NOTE';
 export const ERROR = 'ERROR';

@@ -20,7 +20,10 @@ class NotesApplication {
                 LocalDateTime.now(),
                 null,
                 mutableMapOf("blocks" to arrayOf(
-                        mapOf("type" to "header")
+                        mapOf(
+                                "type" to "paragraph",
+                                "data" to mapOf("text" to "A paragraph")
+                        )
                 ))
         )
         noteRepository.deleteAll().subscribe()

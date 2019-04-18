@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createNote } from '../redux/actions';
-import {Button, Form, Input, Radio, Row, Col} from 'antd';
+import {Button, Form, Input, Row, Col} from 'antd';
 
 const mapDispatchToProps = dispatch => {
     return { createNote: note => dispatch(createNote(note)) };
@@ -24,7 +24,6 @@ class NewNoteFormComponent extends Component {
         data[target] = { value: event.target.value };
         this.setState({ [target]: event.target.value });
         this.props.form.setFields(data);
-        console.log(this.state);
     }
 
     handleSubmit(event) {
@@ -32,8 +31,8 @@ class NewNoteFormComponent extends Component {
         this.props.form.validateFields(error => {
             if (!error) {
                 this.props.form.resetFields(['title']);
-                const { title, type } = this.state;
-                this.props.createNote({ title, type });
+                const { title } = this.state;
+                this.props.createNote({ title });
             }
         });
     }
@@ -67,9 +66,8 @@ class NewNoteFormComponent extends Component {
                         <Form.Item style={{ right: 0 }}>
                             <Button icon={'check'} htmlType={'submit'}>Create</Button>
                         </Form.Item>
-                        <Button icon={"check-circle"}/>
                     </Form>
-                </Col>9
+                </Col>
             </Row>
         );
     }

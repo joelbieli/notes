@@ -1,4 +1,12 @@
-import {NOTE_CREATED, NOTE_UPDATED, NOTE_LOADED, NOTE_DELETED, ERROR} from '../constants/action-types';
+import {
+    NOTE_CREATED,
+    NOTE_UPDATED,
+    NOTE_LOADED,
+    NOTE_DELETED,
+    ERROR,
+    TOGGLE_EDITOR_MODAL,
+    UPDATE_CURRENT_NOTE
+} from '../constants/action-types';
 import axios from 'axios';
 
 export function loadNotes() {
@@ -47,4 +55,12 @@ export function deleteNote(note) {
                 dispatch({ type: ERROR, payload: error });
             });
     };
+}
+
+export function toggleEditorModal() {
+    return { type: TOGGLE_EDITOR_MODAL };
+}
+
+export function updateCurrentNote(note) {
+    return { type: UPDATE_CURRENT_NOTE, payload: note }
 }
