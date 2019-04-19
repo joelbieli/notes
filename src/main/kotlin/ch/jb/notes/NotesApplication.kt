@@ -1,7 +1,7 @@
 package ch.jb.notes
 
-import ch.jb.notes.note.domainmodel.Note
-import ch.jb.notes.note.repository.NoteRepository
+import ch.jb.notes.domainmodel.Note
+import ch.jb.notes.repository.NoteRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
