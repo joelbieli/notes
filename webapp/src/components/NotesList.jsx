@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {Avatar, Button, Icon, List, Popconfirm} from 'antd';
-import {deleteNote, loadNotes, toggleEditorModal, updateCurrentNote} from '../redux/actions';
+import {deleteNote, loadNotes, toggleEditorModal, setCurrentNote} from '../redux/actions';
 import NoteEditorModal from "./NoteEditorModal";
 
 const mapStateToProps = state => {
@@ -13,7 +13,7 @@ const mapDispatchToProps = dispatch => {
         loadNotes:  () => dispatch(loadNotes()),
         deleteNote: note => dispatch(deleteNote(note)),
         toggleEditorModal: () => dispatch(toggleEditorModal()),
-        updateCurrentNote: note => dispatch(updateCurrentNote(note)),
+        setCurrentNote: note => dispatch(setCurrentNote(note)),
     };
 };
 
@@ -29,18 +29,16 @@ class NotesListView extends Component {
     }
 
     openEditor(note) {
-        this.props.updateCurrentNote(note);
+        this.props.setCurrentNote(note);
         this.props.toggleEditorModal();
     }
 
     render() {
-        const { notes } = this.props;
-
         return (
             <div>
                 <List
                     style={{ overflowY: 'auto' }}
-                    dataSource={notes}
+                    dataSource={this.props.notes}
                     renderItem={ item => (
                         <List.Item actions={[
                             <Button shape={'circle'} icon={'edit'} onClick={ () => this.openEditor(item) }/>,

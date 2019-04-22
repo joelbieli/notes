@@ -4,7 +4,9 @@ import {
     NOTE_LOADED,
     NOTE_UPDATED,
     TOGGLE_EDITOR_MODAL,
-    UPDATE_CURRENT_NOTE
+    SET_CURRENT_NOTE,
+    UPDATE_CURRENT_NOTE_TITLE,
+    UPDATE_CURRENT_NOTE_CONTENT
 } from '../constants/action-types';
 
 const initialState = {
@@ -13,7 +15,7 @@ const initialState = {
     editorModalVisible: false,
 };
 
-function rootReducer(action, state = initialState) {
+function rootReducer(state = initialState, action) {
     switch (action.type) {
         case NOTE_CREATED:
         case NOTE_LOADED: {
@@ -26,9 +28,9 @@ function rootReducer(action, state = initialState) {
             return {
                 ...state,
                 notes: [
-                    ...state.notes.slice(0, state.notes.findIndex(note => note.id === action.payload)),
+                    ...state.notes.slice(0, state.notes.findIndex(note => note.id === action.payload.id)),
                     action.payload,
-                    ...state.notes.slice(state.notes.findIndex(note => note.id === action.payload) + 1),
+                    ...state.notes.slice(state.notes.findIndex(note => note.id === action.payload.id) + 1),
                 ],
             };
         }
@@ -47,10 +49,28 @@ function rootReducer(action, state = initialState) {
                 editorModalVisible: !state.editorModalVisible,
             };
         }
-        case UPDATE_CURRENT_NOTE: {
+        case SET_CURRENT_NOTE: {
             return {
                 ...state,
                 currentNote: action.payload,
+            };
+        }
+        case UPDATE_CURRENT_NOTE_TITLE: {
+            return {
+                ...state,
+                currentNote: {
+                    ...state.currentNote,
+                    title: action.payload
+                },
+            };
+        }
+        case UPDATE_CURRENT_NOTE_CONTENT: {
+            return {
+                ...state,
+                currentNote: {
+                    ...state.currentNote,
+                    content: action.payload
+                },
             };
         }
         default: return state;
