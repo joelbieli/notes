@@ -1,4 +1,5 @@
 import {ERROR, NOTE_CREATED} from '../constants/action-types';
+import {message} from 'antd';
 
 export function emptyTitleMiddleware({ dispatch }) {
     return next => {
@@ -17,7 +18,8 @@ export function logError() {
     return next => {
         return action => {
             if (action.type === ERROR) {
-                console.log(`[ERROR]: ${action.payload}`);
+                message.error(action.payload.message);
+                console.log(`[ERROR]: ${action.payload.error}`);
             }
             return next(action);
         };
