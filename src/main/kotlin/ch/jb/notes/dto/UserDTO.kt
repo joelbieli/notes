@@ -3,15 +3,13 @@ package ch.jb.notes.dto
 import ch.jb.notes.domainmodel.Role
 
 class UserDTO(
-        var id: String?,
-        var userName: String,
-        var passwordHash: String,
-        var roles: Set<Role>
+        var id: String? = null,
+        var username: String,
+        var password: String,
+        var roles: Set<Role> = mutableSetOf(Role.USER)
 ) {
     constructor(): this(
-            null,
-            "",
-            "",
-            mutableSetOf()
+            username = "",
+            password = ""
     )
 }

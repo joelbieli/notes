@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Field
 @Document
 open class User(
         @Id @Field var id: String?,
-        @Field var userName: String,
-        @Field var passwordHash: String,
+        @Field var username: String,
+        @Field var password: String,
         @Field var roles: MutableSet<Role>
 ) {
 
@@ -21,8 +21,8 @@ open class User(
 
     constructor(user: User): this(
             user.id,
-            user.userName,
-            user.passwordHash,
+            user.username,
+            user.password,
             user.roles
     )
 }

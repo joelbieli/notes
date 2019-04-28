@@ -1,4 +1,3 @@
-/*
 package ch.jb.notes.security
 
 import org.springframework.security.authentication.AbstractAuthenticationToken
@@ -13,15 +12,15 @@ class JWTAuthenticationToken(
     private var userDetails: UserDetails? = null
     private lateinit var jwt: String
 
-    constructor(jwt: String): this(
-            AuthorityUtils.NO_AUTHORITIES
-    ) {
+    constructor(jwt: String): this(AuthorityUtils.NO_AUTHORITIES) {
         this.jwt = jwt
     }
 
-    constructor(userDetails: UserDetails, jwt: String, authorities: MutableCollection<out GrantedAuthority>): this(
-            authorities
-    ) {
+    constructor(
+            userDetails: UserDetails,
+            jwt: String,
+            authorities: MutableCollection<out GrantedAuthority>
+    ): this(authorities) {
         this.jwt = jwt
         this.userDetails = userDetails
         isAuthenticated = true
@@ -34,4 +33,4 @@ class JWTAuthenticationToken(
     override fun getPrincipal(): Any? {
         return userDetails
     }
-}*/
+}

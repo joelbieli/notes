@@ -1,4 +1,3 @@
-/*
 package ch.jb.notes.security
 
 import ch.jb.notes.repository.UserRepository
@@ -9,12 +8,12 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
-class CustomReactiveUserService: ReactiveUserDetailsService {
+class UserDetailsService: ReactiveUserDetailsService {
 
     @Autowired
     private lateinit var userRepository: UserRepository
 
-    override fun findByUsername(username: String): Mono<UserDetails> {
-        return userRepository.findUserByUserName(username).map { UserPrincipal(it) }
-    }
-}*/
+    override fun findByUsername(username: String): Mono<UserDetails> = userRepository
+            .findUserByUsername(username)
+            .map { UserPrincipal(it) }
+}

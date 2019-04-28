@@ -6,6 +6,7 @@ import ch.jb.notes.exception.NoteNotFoundException
 import ch.jb.notes.mapper.NoteMapper
 import ch.jb.notes.repository.NoteRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.prepost.PreAuthorize
 import reactor.core.publisher.Flux
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
@@ -13,6 +14,7 @@ import reactor.core.publisher.switchIfEmpty
 
 @RestController
 @RequestMapping("/notes")
+@PreAuthorize("isAuthenticated()")
 class NoteController {
 
     @Autowired

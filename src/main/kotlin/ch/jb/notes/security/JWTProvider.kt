@@ -1,4 +1,3 @@
-/*
 package ch.jb.notes.security
 
 import io.jsonwebtoken.*
@@ -65,4 +64,4 @@ class JWTProvider {
         }
         return false
     }
-}*/
+}

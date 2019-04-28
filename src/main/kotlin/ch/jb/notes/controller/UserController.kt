@@ -1,16 +1,19 @@
-/*
 package ch.jb.notes.controller
 
 import ch.jb.notes.dto.UserDTO
+import ch.jb.notes.exception.UsernameTakenException
 import ch.jb.notes.mapper.UserMapper
 import ch.jb.notes.repository.UserRepository
 import ch.jb.notes.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import reactor.core.publisher.switchIfEmpty
 
 @RestController
 @RequestMapping("/users")
@@ -29,10 +32,13 @@ class UserController {
     private lateinit var passwordEncoder: PasswordEncoder
 
     @PostMapping
-    fun save(@RequestBody userDTO: UserDTO): Mono<Any> {
-        return userRepository
-                .save(userMapper.fromDTO(userDTO.also { it.passwordHash = passwordEncoder.encode(it.passwordHash) }))
-                .thenReturn(ok())
+    @PreAuthorize("permitAll()")
+    fun save(@RequestBody userDTO: UserDTO): Mono<in ServerResponse> {
+        userRepository.existsByUsername(userDTO.username)
+                .doOnNext { if (it) throw UsernameTakenException("Username ${userDTO.username} is already taken") }
+
+        return userRepository.save(userMapper.fromDTO(userDTO.also { it.password = passwordEncoder.encode(it.password) }))
+                .map { it. }
     }
 
     @PutMapping
@@ -44,4 +50,4 @@ class UserController {
     fun delete(@PathVariable id: String): Mono<Void> {
         return userService.delete(id)
     }
-}*/
+}

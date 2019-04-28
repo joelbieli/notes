@@ -1,4 +1,3 @@
-/*
 package ch.jb.notes.security
 
 import ch.jb.notes.domainmodel.Role
@@ -8,52 +7,30 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.userdetails.UserDetails
 
-class UserPrincipal(
-        val id: String?,
-        private val userName: String,
-        private val passwordHash: String,
-        private val roles: MutableSet<Role>
-): UserDetails {
-    constructor(user: User): this(
-            user.id,
-            user.userName,
-            user.passwordHash,
-            user.roles
-    )
+class UserPrincipal(user: User) : UserDetails {
+    val id: String? = user.id
+    private val username: String = user.username
+    private val password: String = user.password
+    private val roles: MutableSet<Role> = user.roles
 
     @JsonIgnore
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return AuthorityUtils.commaSeparatedStringToAuthorityList(
-                roles.joinToString(",") { "ROLE_${it.name}" }
-        )
-    }
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> = AuthorityUtils
+            .commaSeparatedStringToAuthorityList(roles.joinToString(",") { "ROLE_${it.name}" })
+
+    override fun getUsername() = username
 
     @JsonIgnore
-    override fun isEnabled(): Boolean {
-        return true
-    }
-
-    override fun getUsername(): String {
-        return userName
-    }
+    override fun getPassword() = password
 
     @JsonIgnore
-    override fun isCredentialsNonExpired(): Boolean {
-        return true
-    }
+    override fun isCredentialsNonExpired() = true
 
     @JsonIgnore
-    override fun getPassword(): String {
-        return passwordHash
-    }
+    override fun isAccountNonExpired() = true
 
     @JsonIgnore
-    override fun isAccountNonExpired(): Boolean {
-        return true
-    }
+    override fun isAccountNonLocked() = true
 
     @JsonIgnore
-    override fun isAccountNonLocked(): Boolean {
-        return true
-    }
-}*/
+    override fun isEnabled() = true
+}
