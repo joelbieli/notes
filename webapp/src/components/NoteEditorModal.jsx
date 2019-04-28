@@ -1,19 +1,17 @@
 import React, {Component} from 'react';
 import EditorJS from '@editorjs/editorjs';
-import {Button, Input, Modal} from "antd";
-import {connect} from "react-redux";
-import {toggleEditorModal, updateCurrentNoteContent, updateCurrentNoteTitle, updateNote} from "../redux/actions";
-import {ERROR} from "../redux/constants/action-types";
+import {Input, Modal} from 'antd';
+import {connect} from 'react-redux';
+import {toggleEditorModal, updateCurrentNoteContent, updateCurrentNoteTitle, updateNote} from '../redux/actions';
+import {ERROR} from '../redux/constants/action-types';
 import Checklist from '@editorjs/checklist';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import Embed from '@editorjs/embed';
 import Header from '@editorjs/header';
 import InlineCode from '@editorjs/inline-code';
-import Link from '@editorjs/link';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
-import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Raw from '@editorjs/raw';
 import SimpleImage from '@editorjs/simple-image';
@@ -99,21 +97,25 @@ class NoteEditorModalComponent extends Component {
                     holderId: 'editor-mounting-point',
                     data: nextProps.currentNote.content,
                     tools: {
-                        checklist: Checklist,
                         code: Code,
                         delimiter: Delimiter,
                         embed: Embed,
                         header: Header,
                         inlineCode: InlineCode,
-                        link: Link,
-                        list: List,
                         marker: Marker,
-                        paragraph: Paragraph,
                         quote: Quote,
                         raw: Raw,
                         simpleImage: SimpleImage,
                         table: Table,
                         warning: Warning,
+                        list: {
+                            class: List,
+                            inlineToolbar: true,
+                        },
+                        checklist: {
+                            class: Checklist,
+                            inlineToolbar: true,
+                        },
                     }
                 })
             });
@@ -132,7 +134,6 @@ class NoteEditorModalComponent extends Component {
                 closable={false}
                 maskClosable={false}>
                 <div id={'editor-mounting-point'}/>
-                <Button onClick={this.printData}>Print Data</Button>
             </Modal>
         );
     }
