@@ -6,13 +6,14 @@ import {
     TOGGLE_EDITOR_MODAL,
     SET_CURRENT_NOTE,
     UPDATE_CURRENT_NOTE_TITLE,
-    UPDATE_CURRENT_NOTE_CONTENT
+    UPDATE_CURRENT_NOTE_CONTENT, LOGIN
 } from '../constants/action-types';
 
 const initialState = {
     notes: [],
     currentNote: {},
     editorModalVisible: false,
+    authToken: null
 };
 
 function rootReducer(state = initialState, action) {
@@ -71,6 +72,12 @@ function rootReducer(state = initialState, action) {
                     ...state.currentNote,
                     content: action.payload
                 },
+            };
+        }
+        case LOGIN: {
+            return  {
+                ...state,
+                authToken: action.payload
             };
         }
         default: return state;

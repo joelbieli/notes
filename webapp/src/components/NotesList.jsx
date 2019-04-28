@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {Avatar, Button, Icon, List, Popconfirm} from 'antd';
 import {deleteNote, loadNotes, toggleEditorModal, setCurrentNote} from '../redux/actions';
-import NoteEditorModal from "./NoteEditorModal";
+import NoteEditorModal from './NoteEditorModal';
 
 const mapStateToProps = state => {
     return { notes: state.notes }
@@ -43,9 +43,9 @@ class NotesListView extends Component {
                         <List.Item actions={[
                             <Button shape={'circle'} icon={'edit'} onClick={ () => this.openEditor(item) }/>,
                             <Popconfirm
-                                title={"Are you sure you want to delete this note?"}
-                                okText={"Yes"}
-                                icon={<Icon type="exclamation-circle" style={{ color: 'red' }}/>}
+                                title={'Are you sure you want to delete this note?'}
+                                okText={'Yes'}
+                                icon={<Icon type='exclamation-circle' style={{ color: 'red' }}/>}
                                 onConfirm={ () => this.props.deleteNote(item) }>
                                 <Button type={'danger'} shape={'circle'} icon={'delete'}/>
                             </Popconfirm>,
