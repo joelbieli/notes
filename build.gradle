@@ -22,7 +22,7 @@ dependencies {
     //Spring dependencies
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    //implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     //JWT dependencies
     implementation 'io.jsonwebtoken:jjwt-api:0.10.6'
