@@ -6,11 +6,12 @@ import App from './components/App';
 import Authentication from "./components/Authentication";
 import 'antd/dist/antd.css';
 import {BrowserRouter, Route} from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 render(
     <Provider store={store}>
         <BrowserRouter>
-            <Route exact path={'/'} component={App}/>
+            <ProtectedRoute path={'/'} component={App}/>
             <Route exact path={'/auth'} component={Authentication}/>
         </BrowserRouter>
     </Provider>,

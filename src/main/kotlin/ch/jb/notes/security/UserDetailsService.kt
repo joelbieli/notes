@@ -14,6 +14,6 @@ class UserDetailsService: ReactiveUserDetailsService {
     private lateinit var userRepository: UserRepository
 
     override fun findByUsername(username: String): Mono<UserDetails> = userRepository
-            .findUserByUsername(username)
+            .findByUsername(username)
             .map { UserPrincipal(it) }
 }

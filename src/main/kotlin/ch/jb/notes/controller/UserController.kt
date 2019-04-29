@@ -6,6 +6,7 @@ import ch.jb.notes.mapper.UserMapper
 import ch.jb.notes.repository.UserRepository
 import ch.jb.notes.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.security.access.prepost.PreAuthorize
@@ -33,12 +34,11 @@ class UserController {
 
     @PostMapping
     @PreAuthorize("permitAll()")
-    fun save(@RequestBody userDTO: UserDTO): Mono<in ServerResponse> {
-        userRepository.existsByUsername(userDTO.username)
-                .doOnNext { if (it) throw UsernameTakenException("Username ${userDTO.username} is already taken") }
-
-        return userRepository.save(userMapper.fromDTO(userDTO.also { it.password = passwordEncoder.encode(it.password) }))
-                .map { it. }
+    fun save(@RequestBody userDTO: UserDTO): Mono<ResponseEntity<Any>> {
+        return userRepository
+                .save(userMapper.fromDTO(userDTO.also { it.password = passwordEncoder.encode(it.password) }))
+                .onErrorResume { throw UsernameTakenException("Username ${userDTO.username} is already taken") }
+                .map { ResponseEntity<Any>(HttpStatus.OK) }
     }
 
     @PutMapping

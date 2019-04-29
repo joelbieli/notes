@@ -71,7 +71,7 @@ class NoteEditorModalComponent extends Component {
                 });
                 this.props.updateCurrentNoteContent(content)
             })
-            .catch(error => dispatch({ type: ERROR, payload: error }));
+            .catch(error => dispatch({type: ERROR, payload: {error, message: 'A problem occurred while saving the note'}}));
         this.props.toggleEditorModal();
     }
 

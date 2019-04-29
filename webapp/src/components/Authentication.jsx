@@ -2,11 +2,18 @@ import React, {Component} from 'react';
 import {Button, Card, Col, Form, Icon, Input, Row, Tabs} from "antd";
 import {login, registerNewUser} from "../redux/actions";
 import {connect} from "react-redux";
+import {Redirect} from "react-router-dom";
 
 const mapDispatchToProps = dispatch => {
     return {
         registerNewUser: user => dispatch(registerNewUser(user)),
         login: user => dispatch(login(user)),
+    };
+};
+
+const mapStateToProps = state => {
+    return {
+        authToken: state.authToken
     };
 };
 
@@ -91,6 +98,8 @@ class AuthenticationComponent extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
 
+        if (this.props.authToken) return <Redirect to={'/'}/>;
+
         return (
             <Row type={'flex'} align={'middle'} justify={'center'} style={{height: '100vh'}}>
                 <Col span={6}>
@@ -151,6 +160,6 @@ class AuthenticationComponent extends Component {
 
 const AuthenticationForm = Form.create({ name: '' })(AuthenticationComponent);
 
-const Authentication = connect(null, mapDispatchToProps)(AuthenticationForm);
+const Authentication = connect(mapStateToProps, mapDispatchToProps)(AuthenticationForm);
 
 export default Authentication;
