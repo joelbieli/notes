@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Redirect, Route} from "react-router-dom";
 import {connect} from "react-redux";
 import * as PropTypes from "prop-types";
+import {loadJWT} from "../redux/actions";
 
 const mapStateToProps = state => {
     return {
@@ -9,7 +10,17 @@ const mapStateToProps = state => {
     };
 };
 
+const mapDispatchToProps = dispatch => {
+    return {
+        loadJWT: () => dispatch(loadJWT())
+    };
+};
+
 class ProtectedRouteComponent extends Component {
+    componentWillMount() {
+        this.props.loadJWT();
+    }
+
     render() {
         return (
             <Route
@@ -24,6 +35,6 @@ ProtectedRouteComponent.propTypes = {
     path: PropTypes.string.isRequired
 };
 
-const ProtectedRoute = connect(mapStateToProps)(ProtectedRouteComponent);
+const ProtectedRoute = connect(mapStateToProps, mapDispatchToProps)(ProtectedRouteComponent);
 
 export default ProtectedRoute;

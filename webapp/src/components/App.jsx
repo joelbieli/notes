@@ -2,8 +2,16 @@ import React, {Component} from 'react';
 import {PageHeader, Col, Row, Button, Dropdown, Menu, Icon} from 'antd';
 import NotesList from './NotesList';
 import NewNoteForm from './NewNoteForm';
+import {logout} from "../redux/actions";
+import {connect} from "react-redux";
 
-class App extends Component {
+const mapDispatchToProps = dispatch => {
+    return {
+        logout: () => dispatch(logout())
+    };
+};
+
+class AppComponent extends Component {
     constructor(props) {
         super(props);
 
@@ -31,7 +39,7 @@ class App extends Component {
                 break;
             }
             case 'logout': {
-
+                this.props.logout();
                 break;
             }
         }
@@ -68,5 +76,7 @@ class App extends Component {
         );
     }
 }
+
+const App = connect(null, mapDispatchToProps)(AppComponent);
 
 export default App;

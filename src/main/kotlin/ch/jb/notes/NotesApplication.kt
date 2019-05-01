@@ -1,5 +1,6 @@
 package ch.jb.notes
 
+import ch.jb.notes.domainmodel.Color
 import ch.jb.notes.domainmodel.Note
 import ch.jb.notes.domainmodel.Role
 import ch.jb.notes.domainmodel.User
@@ -31,7 +32,8 @@ class NotesApplication {
                 "title1",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                null,
+                user,
+                Color.GREY,
                 mutableMapOf("blocks" to arrayOf(
                         mapOf(
                                 "type" to "paragraph",

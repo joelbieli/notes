@@ -5,6 +5,8 @@ import ch.jb.notes.exception.NoNotesFoundException
 import ch.jb.notes.exception.NoteNotFoundException
 import ch.jb.notes.mapper.NoteMapper
 import ch.jb.notes.repository.NoteRepository
+import ch.jb.notes.repository.UserRepository
+import ch.jb.notes.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import reactor.core.publisher.Flux
@@ -21,13 +23,21 @@ class NoteController {
     private lateinit var noteRepository: NoteRepository
 
     @Autowired
+    private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var userService: UserService
+
+    @Autowired
     private lateinit var noteMapper: NoteMapper
 
     @GetMapping
     fun getAll(): Flux<NoteDTO> {
-        return noteRepository.findAll()
+        return userService.getCurrentUserId()
+                .flatMapMany { noteRepository.findAllByOwner(it) }
                 .switchIfEmpty { throw NoNotesFoundException("Could not find any notes") }
                 .map { noteMapper.toDTO(it) }
+
     }
 
     @GetMapping("/{id}")
@@ -38,13 +48,21 @@ class NoteController {
     }
 
     @PostMapping
-    fun save(@RequestBody listNoteDTO: NoteDTO): Mono<NoteDTO> {
-        return noteRepository.save(noteMapper.fromDTO(listNoteDTO)).map { noteMapper.toDTO(it) }
+    fun save(@RequestBody noteDTO: NoteDTO): Mono<NoteDTO> {
+        return userService.getCurrentUserUsername()
+                .flatMap { userRepository.findByUsername(it) }
+                .map { noteMapper.fromDTO(noteDTO).apply { owner = it } }
+                .flatMap { noteRepository.save(it) }
+                .map { noteMapper.toDTO(it) }
     }
 
     @PutMapping
-    fun update(@RequestBody listNoteDTO: NoteDTO): Mono<NoteDTO> {
-        return noteRepository.save(noteMapper.fromDTO(listNoteDTO)).map { noteMapper.toDTO(it) }
+    fun update(@RequestBody noteDTO: NoteDTO): Mono<NoteDTO> {
+        return userService.getCurrentUserUsername()
+                .flatMap { userRepository.findByUsername(it) }
+                .map { noteMapper.fromDTO(noteDTO).apply { owner = it } }
+                .flatMap { noteRepository.save(it) }
+                .map { noteMapper.toDTO(it) }
     }
 
     @DeleteMapping("/{id}")

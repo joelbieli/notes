@@ -21,45 +21,6 @@ class AuthenticationComponent extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            currentTab: 'login',
-            tabsContent: {
-                'login':
-                    <Form>
-                        <Form.Item>
-                            <Input
-                                prefix={<Icon type={'user'}/>}
-                                placeholder={'Username'}/>
-                        </Form.Item>
-                        <Form.Item>
-                            <Input.Password
-                                prefix={<Icon type={'lock'}/>}
-                                placeholder={'Password'}/>
-                        </Form.Item>
-                        <Form.Item>
-                            <Button htmlType={'submit'}>Login</Button>
-                        </Form.Item>
-                    </Form>,
-                'register':
-                    <Form>
-                        <Form.Item>
-                            <Input
-                                prefix={<Icon type={'user'}/>}
-                                placeholder={'Username'}/>
-                        </Form.Item>
-                        <Form.Item>
-                            <Input.Password
-                                prefix={<Icon type={'lock'}/>}
-                                placeholder={'Password'}/>
-                        </Form.Item>
-                        <Form.Item>
-                            <Button htmlType={'submit'}>Register</Button>
-                        </Form.Item>
-                    </Form>,
-            }
-        };
-
-        this.switchTab = this.switchTab.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
     }
@@ -68,6 +29,7 @@ class AuthenticationComponent extends Component {
         event.preventDefault();
         this.props.form.validateFields(['username_login', 'password_login'], (error, values) => {
             if (!error) {
+                this.props.form.resetFields(['username_login', 'password_login']);
                 this.props.login({
                     username: values['username_login'],
                     password: values['password_login'],
@@ -80,18 +42,12 @@ class AuthenticationComponent extends Component {
         event.preventDefault();
         this.props.form.validateFields(['username_register', 'password_register'], (error, values) => {
             if (!error) {
+                this.props.form.resetFields(['username_register', 'password_register']);
                 this.props.registerNewUser({
                     username: values['username_register'],
                     password: values['password_register'],
                 });
             }
-        });
-    }
-
-    switchTab(key) {
-        this.setState({
-            ...this.state,
-            currentTab: key
         });
     }
 

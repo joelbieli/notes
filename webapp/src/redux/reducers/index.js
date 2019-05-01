@@ -6,7 +6,8 @@ import {
     TOGGLE_EDITOR_MODAL,
     SET_CURRENT_NOTE,
     UPDATE_CURRENT_NOTE_TITLE,
-    UPDATE_CURRENT_NOTE_CONTENT, LOGIN
+    UPDATE_CURRENT_NOTE_CONTENT,
+    SET_AUTH_TOKEN, REMOVE_AUTH_TOKEN, UPDATE_CURRENT_NOTE_COLOR
 } from '../constants/action-types';
 
 const initialState = {
@@ -74,11 +75,18 @@ function rootReducer(state = initialState, action) {
                 },
             };
         }
-        case LOGIN: {
+        case SET_AUTH_TOKEN: {
+            window.localStorage.setItem('authToken', action.payload);
             return  {
                 ...state,
                 authToken: action.payload
             };
+        }
+        case REMOVE_AUTH_TOKEN: {
+            window.localStorage.removeItem('authToken');
+            return {
+                ...initialState
+            }
         }
         default: return state;
     }
