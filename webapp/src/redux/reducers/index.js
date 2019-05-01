@@ -66,6 +66,15 @@ function rootReducer(state = initialState, action) {
                 },
             };
         }
+        case UPDATE_CURRENT_NOTE_COLOR: {
+            return {
+                ...state,
+                currentNote: {
+                    ...state.currentNote,
+                    color: action.payload
+                },
+            };
+        }
         case UPDATE_CURRENT_NOTE_CONTENT: {
             return {
                 ...state,

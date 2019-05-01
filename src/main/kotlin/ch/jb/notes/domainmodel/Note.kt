@@ -13,6 +13,7 @@ class Note(
         @Field var createdAt: LocalDateTime,
         @Field var lastEdit: LocalDateTime,
         @DBRef var owner: User?,
+        @Field var color: Color,
         @Field var content: MutableMap<String, Any>
 ) {
     constructor(): this(
@@ -21,10 +22,11 @@ class Note(
             LocalDateTime.now(),
             LocalDateTime.now(),
             null,
+            Color.GREY,
             mutableMapOf()
     )
 
     override fun toString(): String {
-        return "Note(id=$id, title='$title', createdAt=$createdAt, lastEdit=$lastEdit, content=$content)"
+        return "Note(id=$id, title='$title', createdAt=$createdAt, lastEdit=$lastEdit, color=$color, content=$content)"
     }
 }

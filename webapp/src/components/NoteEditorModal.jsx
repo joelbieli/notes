@@ -1,9 +1,17 @@
 import React, {Component} from 'react';
 import EditorJS from '@editorjs/editorjs';
-import {Input, Modal} from 'antd';
+import {Button, Col, Icon, Input, Modal, Popover, Radio, Row} from 'antd';
 import {connect} from 'react-redux';
-import {toggleEditorModal, updateCurrentNoteContent, updateCurrentNoteTitle, updateNote} from '../redux/actions';
+import {
+    toggleEditorModal,
+    updateCurrentNoteColor,
+    updateCurrentNoteContent,
+    updateCurrentNoteTitle,
+    updateNote
+} from '../redux/actions';
 import {ERROR} from '../redux/constants/action-types';
+import COLORS from '../redux/constants/colors';
+import '../style/colorpicker.css';
 import Checklist from '@editorjs/checklist';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
@@ -18,6 +26,7 @@ import SimpleImage from '@editorjs/simple-image';
 import Table from '@editorjs/table';
 import Warning from '@editorjs/warning';
 
+
 const mapStateToProps = state => {
     return {
         visible: state.editorModalVisible,
@@ -29,6 +38,7 @@ const mapDispatchToProps = dispatch => {
     return {
         toggleEditorModal: () => dispatch(toggleEditorModal()),
         updateCurrentNoteTitle: title => dispatch(updateCurrentNoteTitle(title)),
+        updateCurrentNoteColor: color => dispatch(updateCurrentNoteColor(color)),
         updateCurrentNoteContent: content => dispatch(updateCurrentNoteContent(content)),
         updateNote: note => dispatch(updateNote(note)),
     };
@@ -45,7 +55,6 @@ class NoteEditorModalComponent extends Component {
         this.cancelHandler = this.cancelHandler.bind(this);
         this.okHandler = this.okHandler.bind(this);
         this.titleChangeHandler = this.titleChangeHandler.bind(this);
-        this.printData = this.printData.bind(this);
     }
 
     cancelHandler() {
@@ -79,12 +88,8 @@ class NoteEditorModalComponent extends Component {
         this.props.updateCurrentNoteTitle(event.target.value);
     }
 
-    printData({dispatch}) {
-        this.state.editor.save()
-            .then(content => {
-                console.log(content);
-            })
-            .catch(error => dispatch({ type: ERROR, payload: error }));
+    colorChangeHandler(color) {
+        this.props.updateCurrentNoteColor(color);
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -126,7 +131,37 @@ class NoteEditorModalComponent extends Component {
         return (
             <Modal
                 centered
-                title={<Input defaultValue={this.props.currentNote.title} onChange={event => this.titleChangeHandler(event)}/>}
+                title={
+                    <Row type={'flex'} align={'middle'}>
+                        <Col span={22}>
+                            <Input value={this.props.currentNote.title} onChange={event => this.titleChangeHandler(event)}/>
+                        </Col>
+                        <Col style={{marginLeft: '5px'}}>
+                            <Popover
+                                placement="bottomRight"
+                                title={null}
+                                content={
+                                    <Row type={'flex'} justify={'center'}>
+                                        <Col>
+                                            {Object.keys(COLORS).map(key => {
+                                                return (
+                                                    <label className={'radio-container'} onClick={() => this.colorChangeHandler(key)}>
+                                                        <input checked={this.props.currentNote.color === key} type={'radio'} name={'color'}/>
+                                                        <span style={{backgroundColor: COLORS[key]}} className={'circle'}>
+                                                        <span className={'overlay'}/>
+                                                    </span>
+                                                    </label>
+                                                );
+                                            })}
+                                        </Col>
+                                    </Row>
+                                }
+                                trigger="click">
+                                <Button icon={'more'}/>
+                            </Popover>
+                        </Col>
+                    </Row>
+                }
                 visible={this.props.visible}
                 onCancel={this.cancelHandler}
                 okText={'Save & Exit'}

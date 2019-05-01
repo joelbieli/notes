@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {Avatar, Button, Icon, List, Popconfirm} from 'antd';
 import {deleteNote, loadNotes, toggleEditorModal, setCurrentNote} from '../redux/actions';
+import COLORS from '../redux/constants/colors';
 import NoteEditorModal from './NoteEditorModal';
 
 const mapStateToProps = state => {
@@ -51,7 +52,7 @@ class NotesListView extends Component {
                             </Popconfirm>,
                         ]}>
                             <List.Item.Meta
-                                avatar={<Avatar icon={ item.type === 'TEXT' ? 'align-center' : 'bars' }/>}
+                                avatar={<Avatar style={{backgroundColor: COLORS[item.color]}}/>}
                                 title={item.title}
                             />
                         </List.Item>
