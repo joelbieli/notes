@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import EditorJS from '@editorjs/editorjs';
-import {Button, Col, Icon, Input, Modal, Popover, Radio, Row} from 'antd';
+import {Button, Col, Input, Modal, Popover, Row} from 'antd';
 import {connect} from 'react-redux';
 import {
     toggleEditorModal,
@@ -144,7 +144,7 @@ class NoteEditorModalComponent extends Component {
                                     <div style={{height: 40}}>
                                         {Object.keys(COLORS).map(key => {
                                             return (
-                                                <label className={'radio-container'} onClick={() => this.colorChangeHandler(key)}>
+                                                <label key={key} className={'radio-container'} onClick={() => this.colorChangeHandler(key)}>
                                                     <input checked={this.props.currentNote.color === key} type={'radio'} name={'color'}/>
                                                     <span style={{backgroundColor: COLORS[key]}} className={'circle'}>
                                                         <span className={'overlay'}/>

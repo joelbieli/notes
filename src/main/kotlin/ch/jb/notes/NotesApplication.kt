@@ -19,7 +19,7 @@ class NotesApplication {
     @Bean
     fun run(noteRepository: NoteRepository, userRepository: UserRepository, passwordEncoder: PasswordEncoder) = CommandLineRunner {
         val user = User(
-                null,
+                "5ccaee79c7fcdc6f5432738a",
                 "joel",
                 passwordEncoder.encode("pw"),
                 mutableSetOf(Role.ADMIN)

@@ -3,11 +3,13 @@ import {
     NOTE_DELETED,
     NOTE_LOADED,
     NOTE_UPDATED,
-    TOGGLE_EDITOR_MODAL,
+    REMOVE_AUTH_TOKEN,
+    SET_AUTH_TOKEN,
     SET_CURRENT_NOTE,
-    UPDATE_CURRENT_NOTE_TITLE,
+    TOGGLE_EDITOR_MODAL,
+    UPDATE_CURRENT_NOTE_COLOR,
     UPDATE_CURRENT_NOTE_CONTENT,
-    SET_AUTH_TOKEN, REMOVE_AUTH_TOKEN, UPDATE_CURRENT_NOTE_COLOR
+    UPDATE_CURRENT_NOTE_TITLE
 } from '../constants/action-types';
 
 const initialState = {
@@ -23,7 +25,9 @@ function rootReducer(state = initialState, action) {
         case NOTE_LOADED: {
             return {
                 ...state,
-                notes: state.notes.concat(action.payload),
+                notes: state.notes
+                    .concat(action.payload)
+                    .sort((note1, note2) => new Date(note2.lastEdit) - new Date(note1.lastEdit)),
             };
         }
         case NOTE_UPDATED: {
@@ -33,7 +37,7 @@ function rootReducer(state = initialState, action) {
                     ...state.notes.slice(0, state.notes.findIndex(note => note.id === action.payload.id)),
                     action.payload,
                     ...state.notes.slice(state.notes.findIndex(note => note.id === action.payload.id) + 1),
-                ],
+                ].sort((note1, note2) => new Date(note2.lastEdit) - new Date(note1.lastEdit)),
             };
         }
         case NOTE_DELETED: {
@@ -42,7 +46,7 @@ function rootReducer(state = initialState, action) {
                 notes: [
                     ...state.notes.slice(0, state.notes.findIndex(note => note.id === action.payload)),
                     ...state.notes.slice(state.notes.findIndex(note => note.id === action.payload) + 1),
-                ],
+                ].sort((note1, note2) => new Date(note2.lastEdit) - new Date(note1.lastEdit)),
             };
         }
         case TOGGLE_EDITOR_MODAL: {

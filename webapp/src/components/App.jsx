@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
-import {PageHeader, Col, Row, Button, Dropdown, Menu, Icon} from 'antd';
+import {Button, Col, Dropdown, Icon, Menu, PageHeader, Row} from 'antd';
 import NotesList from './NotesList';
 import NewNoteForm from './NewNoteForm';
-import {logout} from "../redux/actions";
+import {exportNotes, importNotes, logout} from "../redux/actions";
 import {connect} from "react-redux";
 
 const mapDispatchToProps = dispatch => {
     return {
-        logout: () => dispatch(logout())
+        logout: () => dispatch(logout()),
+        exportNotes: () => dispatch(exportNotes()),
+        importNotes: file => dispatch(importNotes(file))
     };
 };
 
@@ -21,6 +23,7 @@ class AppComponent extends Component {
 
         this.toggleSettings = this.toggleSettings.bind(this);
         this.handleSettingsAction = this.handleSettingsAction.bind(this);
+        this.handleImportFileChange = this.handleImportFileChange.bind(this);
     }
 
     toggleSettings() {
@@ -32,10 +35,11 @@ class AppComponent extends Component {
     handleSettingsAction({key}) {
         switch (key) {
             case 'download': {
-
+                this.props.exportNotes();
                 break;
             }
             case 'upload': {
+                document.getElementById('import-file-input').click();
                 break;
             }
             case 'logout': {
@@ -43,6 +47,10 @@ class AppComponent extends Component {
                 break;
             }
         }
+    }
+
+    handleImportFileChange() {
+        this.props.importNotes(document.getElementById('import-file-input').files[0]);
     }
 
     render() {
@@ -57,6 +65,7 @@ class AppComponent extends Component {
                                 <Menu onClick={this.handleSettingsAction}>
                                     <Menu.Item key={'download'}><Icon type={'download'}/>Export Notes</Menu.Item>
                                     <Menu.Item key={'upload'}><Icon type={'upload'}/>Import Notes</Menu.Item>
+                                    <input onChange={this.handleImportFileChange} type={"file"} id={'import-file-input'} accept={'.json'} style={{display: 'none'}}/>
                                     <Menu.Item key={'logout'} ><Icon type={'logout'}/>Log Out</Menu.Item>
                                 </Menu>
                             }>
@@ -65,7 +74,8 @@ class AppComponent extends Component {
                                 shape={'circle'}
                                 icon={'setting'}/>
                         </Dropdown>
-                    ]}/>
+                    ]}
+                />
                 <Row type={'flex'} justify={'center'}>
                     <Col span={12}>
                         <NewNoteForm/>

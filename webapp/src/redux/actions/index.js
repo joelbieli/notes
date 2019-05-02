@@ -1,17 +1,18 @@
 import {
-    NOTE_CREATED,
-    NOTE_UPDATED,
-    NOTE_LOADED,
-    NOTE_DELETED,
     ERROR,
-    TOGGLE_EDITOR_MODAL,
-    SET_CURRENT_NOTE,
-    UPDATE_CURRENT_NOTE_TITLE,
-    UPDATE_CURRENT_NOTE_CONTENT,
-    SET_AUTH_TOKEN,
+    NOTE_CREATED,
+    NOTE_DELETED,
+    NOTE_LOADED,
+    NOTE_UPDATED,
     REMOVE_AUTH_TOKEN,
-    UPDATE_CURRENT_NOTE_COLOR
+    SET_AUTH_TOKEN,
+    SET_CURRENT_NOTE,
+    TOGGLE_EDITOR_MODAL,
+    UPDATE_CURRENT_NOTE_COLOR,
+    UPDATE_CURRENT_NOTE_CONTENT,
+    UPDATE_CURRENT_NOTE_TITLE
 } from '../constants/action-types';
+import fileDownload from 'js-file-download';
 import axios from 'axios';
 
 export function loadNotes() {
@@ -118,5 +119,35 @@ export function loadJWT() {
         if ((token = window.localStorage.getItem('authToken'))) {
             dispatch({type: SET_AUTH_TOKEN, payload: token});
         }
+    };
+}
+
+export function exportNotes() {
+    return (dispatch, getState) => {
+        axios.get('http://localhost:8090/notes', {headers: {'Authorization': `Bearer ${getState().authToken}`}})
+            .then(response => {
+                fileDownload(JSON.stringify(response.data), 'notes-export.json', 'application/json');
+            })
+            .catch(error => {
+                dispatch({ type: ERROR, payload: { error, message: 'A problem occurred while exporting your notes' } });
+            });
+    };
+}
+
+export function importNotes(file) {
+    const fileReader = new FileReader();
+
+    return (dispatch, getState) => {
+        fileReader.readAsText(file);
+        fileReader.onload = (event) => {
+            axios.post(
+                'http://localhost:8090/notes/import',
+                JSON.parse(event.target.result),
+                {headers: {'Authorization': `Bearer ${getState().authToken}`}}
+                ).then(() => dispatch(loadNotes()))
+                .catch(error => {
+                    dispatch({ type: ERROR, payload: { error, message: 'A problem occurred while importing your notes' } });
+                });
+        };
     };
 }
