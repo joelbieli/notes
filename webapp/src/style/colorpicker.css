@@ -5,6 +5,9 @@
     user-select: none;
     height: 40px;
     width: 40px;
+}
+
+.radio-container:not(:last-child) {
     margin-right: 10px;
 }
 

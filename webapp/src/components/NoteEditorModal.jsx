@@ -141,20 +141,18 @@ class NoteEditorModalComponent extends Component {
                                 placement="bottomRight"
                                 title={null}
                                 content={
-                                    <Row type={'flex'} justify={'center'}>
-                                        <Col>
-                                            {Object.keys(COLORS).map(key => {
-                                                return (
-                                                    <label className={'radio-container'} onClick={() => this.colorChangeHandler(key)}>
-                                                        <input checked={this.props.currentNote.color === key} type={'radio'} name={'color'}/>
-                                                        <span style={{backgroundColor: COLORS[key]}} className={'circle'}>
+                                    <div style={{height: 40}}>
+                                        {Object.keys(COLORS).map(key => {
+                                            return (
+                                                <label className={'radio-container'} onClick={() => this.colorChangeHandler(key)}>
+                                                    <input checked={this.props.currentNote.color === key} type={'radio'} name={'color'}/>
+                                                    <span style={{backgroundColor: COLORS[key]}} className={'circle'}>
                                                         <span className={'overlay'}/>
                                                     </span>
-                                                    </label>
-                                                );
-                                            })}
-                                        </Col>
-                                    </Row>
+                                                </label>
+                                            );
+                                        })}
+                                    </div>
                                 }
                                 trigger="click">
                                 <Button icon={'more'}/>
