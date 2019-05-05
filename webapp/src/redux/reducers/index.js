@@ -6,17 +6,16 @@ import {
     REMOVE_AUTH_TOKEN,
     SET_AUTH_TOKEN,
     SET_CURRENT_NOTE,
+    SET_EDITOR_READY,
     TOGGLE_EDITOR_MODAL,
-    UPDATE_CURRENT_NOTE_COLOR,
-    UPDATE_CURRENT_NOTE_CONTENT,
-    UPDATE_CURRENT_NOTE_TITLE
 } from '../constants/action-types';
 
 const initialState = {
     notes: [],
     currentNote: {},
     editorModalVisible: false,
-    authToken: null
+    authToken: null,
+    editorReady: true
 };
 
 function rootReducer(state = initialState, action) {
@@ -61,31 +60,10 @@ function rootReducer(state = initialState, action) {
                 currentNote: action.payload,
             };
         }
-        case UPDATE_CURRENT_NOTE_TITLE: {
+        case SET_EDITOR_READY: {
             return {
                 ...state,
-                currentNote: {
-                    ...state.currentNote,
-                    title: action.payload
-                },
-            };
-        }
-        case UPDATE_CURRENT_NOTE_COLOR: {
-            return {
-                ...state,
-                currentNote: {
-                    ...state.currentNote,
-                    color: action.payload
-                },
-            };
-        }
-        case UPDATE_CURRENT_NOTE_CONTENT: {
-            return {
-                ...state,
-                currentNote: {
-                    ...state.currentNote,
-                    content: action.payload
-                },
+                editorReady: action.payload
             };
         }
         case SET_AUTH_TOKEN: {

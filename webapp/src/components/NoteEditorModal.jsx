@@ -3,13 +3,11 @@ import EditorJS from '@editorjs/editorjs';
 import {Button, Col, Input, Modal, Popover, Row} from 'antd';
 import {connect} from 'react-redux';
 import {
+    dispatchError,
+    setEditorReady,
     toggleEditorModal,
-    updateCurrentNoteColor,
-    updateCurrentNoteContent,
-    updateCurrentNoteTitle,
     updateNote
 } from '../redux/actions';
-import {ERROR} from '../redux/constants/action-types';
 import COLORS from '../redux/constants/colors';
 import '../style/colorpicker.css';
 import Checklist from '@editorjs/checklist';
@@ -26,21 +24,20 @@ import SimpleImage from '@editorjs/simple-image';
 import Table from '@editorjs/table';
 import Warning from '@editorjs/warning';
 
-
 const mapStateToProps = state => {
     return {
         visible: state.editorModalVisible,
         currentNote: state.currentNote,
+        editorReady: state.editorReady
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         toggleEditorModal: () => dispatch(toggleEditorModal()),
-        updateCurrentNoteTitle: title => dispatch(updateCurrentNoteTitle(title)),
-        updateCurrentNoteColor: color => dispatch(updateCurrentNoteColor(color)),
-        updateCurrentNoteContent: content => dispatch(updateCurrentNoteContent(content)),
+        setEditorReady: isReady => dispatch(setEditorReady(isReady)),
         updateNote: note => dispatch(updateNote(note)),
+        dispatchError: (error, message) => dispatch(dispatchError(error, message))
     };
 };
 
@@ -50,11 +47,14 @@ class NoteEditorModalComponent extends Component {
 
         this.state = {
             editor: null,
+            editorReady: true,
+            currentNote: {}
         };
 
         this.cancelHandler = this.cancelHandler.bind(this);
         this.okHandler = this.okHandler.bind(this);
         this.titleChangeHandler = this.titleChangeHandler.bind(this);
+        this.colorChangeHandler = this.colorChangeHandler.bind(this);
     }
 
     cancelHandler() {
@@ -70,30 +70,67 @@ class NoteEditorModalComponent extends Component {
         });
     }
 
-    okHandler({ dispatch }) {
+    okHandler() {
+        const _this = this;
+        this.props.setEditorReady(false);
+
         this.state.editor.save()
             .then(content => {
-                console.log(content);
-                this.props.updateNote({
-                    ...this.props.currentNote,
-                    content: content,
+                _this.setState({
+                    ..._this.state,
+                    currentNote: {
+                        ..._this.state.currentNote,
+                        content
+                    }
                 });
-                this.props.updateCurrentNoteContent(content)
+
+                _this.props.updateNote({
+                        ..._this.state.currentNote,
+                        content
+                });
+
+                setTimeout(() => _this.props.setEditorReady(true), 1000, 1000)
             })
-            .catch(error => dispatch({type: ERROR, payload: {error, message: 'A problem occurred while saving the note'}}));
-        this.props.toggleEditorModal();
+            .catch(error => {
+                _this.props.dispatchError(error, 'A problem occurred while saving the note');
+            });
+
+        _this.props.toggleEditorModal();
     }
 
     titleChangeHandler(event) {
-        this.props.updateCurrentNoteTitle(event.target.value);
+        this.setState({
+            ...this.state,
+            currentNote: {
+                ...this.state.currentNote,
+                title: event.target.value
+            }
+        });
     }
 
     colorChangeHandler(color) {
-        this.props.updateCurrentNoteColor(color);
+        this.setState({
+            ...this.state,
+            currentNote: {
+                ...this.state.currentNote,
+                color: color
+            }
+        });
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (this.props.currentNote.id !== nextProps.currentNote.id || this.props.currentNote.content !== nextProps.currentNote.content) {
+        const _this = this;
+
+        if ((nextProps.currentNote.id !== this.state.currentNote.id ||
+            JSON.stringify(nextProps.currentNote.content.blocks) !== JSON.stringify(this.state.currentNote.content.blocks) ||
+            nextProps.currentNote.color !== this.state.currentNote.color ||
+            nextProps.currentNote.title !== this.state.currentNote.title
+        ) && nextProps.editorReady) {
+            this.setState({
+                ...this.state,
+                currentNote: nextProps.currentNote
+            });
+
             if (this.state.editor)
                 this.state.editor.destroy();
 
@@ -121,6 +158,9 @@ class NoteEditorModalComponent extends Component {
                             class: Checklist,
                             inlineToolbar: true,
                         },
+                    },
+                    onReady() {
+                        _this.props.setEditorReady(true);
                     }
                 })
             });
@@ -134,7 +174,7 @@ class NoteEditorModalComponent extends Component {
                 title={
                     <Row type={'flex'} align={'middle'}>
                         <Col span={22}>
-                            <Input value={this.props.currentNote.title} onChange={event => this.titleChangeHandler(event)}/>
+                            <Input value={this.state.currentNote.title} onChange={event => this.titleChangeHandler(event)}/>
                         </Col>
                         <Col style={{marginLeft: '5px'}}>
                             <Popover
@@ -145,7 +185,7 @@ class NoteEditorModalComponent extends Component {
                                         {Object.keys(COLORS).map(key => {
                                             return (
                                                 <label key={key} className={'radio-container'} onClick={() => this.colorChangeHandler(key)}>
-                                                    <input checked={this.props.currentNote.color === key} type={'radio'} name={'color'}/>
+                                                    <input checked={this.state.currentNote.color === key} type={'radio'} name={'color'}/>
                                                     <span style={{backgroundColor: COLORS[key]}} className={'circle'}>
                                                         <span className={'overlay'}/>
                                                     </span>
@@ -155,7 +195,7 @@ class NoteEditorModalComponent extends Component {
                                     </div>
                                 }
                                 trigger="click">
-                                <Button icon={'more'}/>
+                                <Button icon={'bg-colors'}/>
                             </Popover>
                         </Col>
                     </Row>
@@ -164,6 +204,7 @@ class NoteEditorModalComponent extends Component {
                 onCancel={this.cancelHandler}
                 okText={'Save & Exit'}
                 onOk={this.okHandler}
+                okButtonProps={{ disabled: !this.props.editorReady }}
                 closable={false}
                 maskClosable={false}>
                 <div id={'editor-mounting-point'}/>

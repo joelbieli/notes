@@ -6,11 +6,8 @@ import {
     NOTE_UPDATED,
     REMOVE_AUTH_TOKEN,
     SET_AUTH_TOKEN,
-    SET_CURRENT_NOTE,
+    SET_CURRENT_NOTE, SET_EDITOR_READY,
     TOGGLE_EDITOR_MODAL,
-    UPDATE_CURRENT_NOTE_COLOR,
-    UPDATE_CURRENT_NOTE_CONTENT,
-    UPDATE_CURRENT_NOTE_TITLE
 } from '../constants/action-types';
 import fileDownload from 'js-file-download';
 import axios from 'axios';
@@ -71,16 +68,9 @@ export function setCurrentNote(note) {
     return { type: SET_CURRENT_NOTE, payload: note }
 }
 
-export function updateCurrentNoteTitle(title) {
-    return { type: UPDATE_CURRENT_NOTE_TITLE, payload: title };
-}
-
-export function updateCurrentNoteColor(color) {
-    return { type: UPDATE_CURRENT_NOTE_COLOR, payload: color };
-}
-
-export function updateCurrentNoteContent(content) {
-    return { type: UPDATE_CURRENT_NOTE_CONTENT, payload: content };
+export function setEditorReady(isReady) {
+    console.log(`editorReady set to ${isReady}`);
+    return { type: SET_EDITOR_READY, payload: isReady };
 }
 
 export function registerNewUser(user) {
@@ -150,4 +140,11 @@ export function importNotes(file) {
                 });
         };
     };
+}
+
+export function dispatchError(error, message) {
+    return dispatch => {
+        dispatch({type: ERROR, payload: {error, message}});
+    };
+
 }
