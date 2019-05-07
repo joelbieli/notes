@@ -1,1 +1,1 @@
-Documentation can be found under the Wiki tab on the left
+Documentation can be found [here](https://joelbieli.github.io/notes/)

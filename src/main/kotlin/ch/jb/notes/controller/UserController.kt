@@ -5,6 +5,7 @@ import ch.jb.notes.exception.UsernameTakenException
 import ch.jb.notes.mapper.UserMapper
 import ch.jb.notes.repository.UserRepository
 import ch.jb.notes.service.UserService
+import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -31,6 +32,10 @@ class UserController {
 
     @PostMapping
     @PreAuthorize("permitAll()")
+    @ApiOperation(
+            value = "Creates the given user",
+            response = ResponseEntity::class
+    )
     fun save(@RequestBody userDTO: UserDTO): Mono<ResponseEntity<Any>> {
         return userRepository
                 .save(userMapper.fromDTO(userDTO.also { it.password = passwordEncoder.encode(it.password) }))
@@ -39,11 +44,19 @@ class UserController {
     }
 
     @PutMapping
+    @ApiOperation(
+            value = "Updates the user with the id of the given user based on the given user",
+            response = UserDTO::class
+    )
     fun update(@RequestBody userDTO: UserDTO): Mono<UserDTO> {
         return userRepository.save(userMapper.fromDTO(userDTO)).map { userMapper.toDTO(it) }
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(
+            value = "Deletes the user with the given id",
+            response = Void::class
+    )
     fun delete(@PathVariable id: String): Mono<Void> {
         return userService.delete(id)
     }

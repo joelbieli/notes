@@ -2,6 +2,7 @@ package ch.jb.notes.controller
 
 import ch.jb.notes.security.JWTProvider
 import ch.jb.notes.security.UserPrincipal
+import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
@@ -18,6 +19,10 @@ class AuthenticationController {
     private lateinit var jwtProvider: JWTProvider
 
     @PostMapping("/login")
+    @ApiOperation(
+            value = "Endpoint for initial authentication",
+            response = String::class
+    )
     fun login(exchange: ServerWebExchange): Mono<String> {
         return ReactiveSecurityContextHolder.getContext()
                 .map { it.authentication.principal as UserPrincipal }
