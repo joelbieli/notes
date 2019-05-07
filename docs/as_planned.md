@@ -1,7 +1,5 @@
 # Note App
 
-[TOC]
-
 ## Description
 
 The planned program shall be a note taking application, implemented in Kotlin, offering the functionality of of looking at an overview of notes, creating a new note, looking at and editing an existing note and searching/filtering the notes. It shall offer two types of notes, a normal text note and a to-do/shopping list type note, both having basic markdown formatting support. It shall have a GUI, implemented in TornadoFX, that follows the MVC pattern.
