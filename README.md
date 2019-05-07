@@ -1,1 +1,1 @@
-notes
+Documentation can be found under the Wiki tab on the left
