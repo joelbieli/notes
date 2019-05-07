@@ -31,6 +31,6 @@ class GenerateSwaggerDoc {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk
-                .expectBody().consumeWith { File("swagger.json").writeText(String(it.responseBody!!)) }
+                .expectBody().consumeWith { File("/docs/swagger.json").writeText(String(it.responseBody!!)) }
     }
 }
