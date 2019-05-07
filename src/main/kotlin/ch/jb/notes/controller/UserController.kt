@@ -5,6 +5,7 @@ import ch.jb.notes.exception.UsernameTakenException
 import ch.jb.notes.mapper.UserMapper
 import ch.jb.notes.repository.UserRepository
 import ch.jb.notes.service.UserService
+import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/users")
+@Api(description = "Set of endpoints for user related operations")
 class UserController {
 
     @Autowired

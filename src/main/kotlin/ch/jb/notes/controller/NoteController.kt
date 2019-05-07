@@ -23,7 +23,7 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping("/notes")
 @PreAuthorize("isAuthenticated()")
-@Api(description = "Set of endpoints for note related operation (caller must be authenticated)")
+@Api(description = "Set of endpoints for note related operations (caller must be authenticated)")
 class NoteController {
 
     @Autowired
@@ -126,11 +126,11 @@ class NoteController {
                 .map { noteMapper.toDTO(it) }
     }
 
+    @DeleteMapping("/{id}")
     @ApiOperation(
             value = "Deletes the note with the given id",
             response = Void::class
     )
-    @DeleteMapping("/{id}")
     fun delete(@PathVariable id: String): Mono<Void> {
         return noteRepository.deleteById(id)
     }
